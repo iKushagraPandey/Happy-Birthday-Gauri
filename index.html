@@ -28,17 +28,22 @@
 
         let fireworks = [];
         let stars = [];
-        
+        let textParticles = [];
+        const textArch = [
+            { text: 'Happy', xFactor: 0.3, delay: 1000 },
+            { text: 'Birthday', xFactor: 0.5, delay: 2000 },
+            { text: 'Gauri!', xFactor: 0.7, delay: 3000 }
+        ];
+
         class Firework {
-            constructor(x, y, color, text, delay) {
+            constructor(x, y, color, delay, type) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
-                this.text = text;
+                this.type = type;
                 this.particles = [];
                 this.exploded = false;
-                this.delay = delay;
-                setTimeout(() => this.explode(), this.delay);
+                setTimeout(() => this.explode(), delay);
                 for (let i = 0; i < 60; i++) {
                     this.particles.push(new Particle(this.x, this.y, this.color));
                 }
@@ -57,13 +62,6 @@
                     ctx.fill();
                 } else {
                     this.particles.forEach(p => p.update());
-                    if (this.text) {
-                        ctx.fillStyle = this.color;
-                        ctx.font = '50px Arial';
-                        ctx.globalAlpha = Math.random();
-                        ctx.fillText(this.text, this.x - 100, this.y);
-                        ctx.globalAlpha = 1;
-                    }
                 }
             }
             update() {
@@ -117,17 +115,26 @@
             }
         }
 
-        function addFirework(x, y, color, text, delay) {
-            fireworks.push(new Firework(x, y, color, text, delay));
+        function addFirework(x, y, color, delay, type) {
+            fireworks.push(new Firework(x, y, color, delay, type));
         }
-        
+
         function createStars() {
             for (let i = 0; i < 150; i++) {
                 stars.push(new Star());
             }
         }
         createStars();
-        
+
+        function addTextParticles() {
+            textArch.forEach((t, i) => {
+                setTimeout(() => {
+                    textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.4 + (i * 30), alpha: 0 });
+                }, t.delay);
+            });
+        }
+        addTextParticles();
+
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             stars.forEach(star => {
@@ -138,18 +145,20 @@
                 firework.update();
                 firework.draw();
             });
+            textParticles.forEach((tp, index) => {
+                if (tp.alpha < 1) tp.alpha += 0.01;
+                ctx.fillStyle = `rgba(255, 215, 0, ${tp.alpha})`;
+                ctx.font = '50px Arial';
+                ctx.fillText(tp.text, tp.x - 100, tp.y);
+            });
             requestAnimationFrame(animate);
         }
         animate();
-        
-        setTimeout(() => addFirework(canvas.width * 0.3, canvas.height, 'red', 'Happy', 1000), 500);
-        setTimeout(() => addFirework(canvas.width * 0.5, canvas.height, 'blue', 'Birthday', 2000), 1000);
-        setTimeout(() => addFirework(canvas.width * 0.7, canvas.height, 'green', 'Gauri!', 3000), 1500);
-        
-        // Extra random fireworks
-        setInterval(() => {
-            addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, '', 0);
-        }, 800);
+
+        setTimeout(() => addFirework(canvas.width * 0.3, canvas.height, 'red', 1000, 'normal'), 500);
+        setTimeout(() => addFirework(canvas.width * 0.5, canvas.height, 'blue', 2000, 'normal'), 1000);
+        setTimeout(() => addFirework(canvas.width * 0.7, canvas.height, 'green', 3000, 'normal'), 1500);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, 'random'), 800);
     </script>
 </body>
 </html>
