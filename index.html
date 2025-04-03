@@ -1,4 +1,166 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Happy Birthday Gauri!</title> <style> body { margin: 0; overflow: hidden; background: black; } canvas { position: absolute; top: 0; left: 0; } </style> </head> <body> <canvas id="fireworksCanvas"></canvas> <script> const canvas = document.getElementById('fireworksCanvas'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight; let fireworks = []; let stars = []; let textParticles = []; const textArch = [ { text: '🎂 Happy', xFactor: 0.3, delay: 1000 }, { text: '🎉 Birthday', xFactor: 0.5, delay: 2000 }, { text: '❤️ Gauri!', xFactor: 0.7, delay: 3000 } ]; class Firework { constructor(x, y, color, delay) { this.x = x; this.y = y; this.color = color; this.particles = []; this.exploded = false; setTimeout(() => this.explode(), delay); for (let i = 0; i < 80; i++) { this.particles.push(new Particle(this.x, this.y, this.color)); } } explode() { this.exploded = true; setTimeout(() => { fireworks = fireworks.filter(fw => fw !== this); }, 3000); } draw() { if (!this.exploded) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 8, 0, Math.PI * 2); ctx.fill(); } else { this.particles.forEach(p => p.update()); } } update() { if (!this.exploded) { this.y -= 6; } } } class Particle { constructor(x, y, color) { this.x = x; this.y = y; this.color = color; this.alpha = 1; this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 }; } update() { this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.01; ctx.fillStyle = this.color; ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, 6, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; } } class Star { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 3; this.alpha = Math.random(); } twinkle() { this.alpha += (Math.random() - 0.5) * 0.02; if (this.alpha < 0.1) this.alpha = 0.1; if (this.alpha > 1) this.alpha = 1; } draw() { ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } } function addFirework(x, y, color, delay) { fireworks.push(new Firework(x, y, color, delay)); } function createStars() { for (let i = 0; i < 200; i++) { stars.push(new Star()); } } createStars(); function addTextParticles() { textArch.forEach((t, i) => { setTimeout(() => { textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.4 + (i * 40), alpha: 0 }); }, t.delay); }); } addTextParticles(); function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); stars.forEach(star => { star.twinkle(); star.draw(); }); fireworks.forEach(firework => { firework.update(); firework.draw(); }); textParticles.forEach((tp, index) => { if (tp.alpha < 1) tp.alpha += 0.01; ctx.fillStyle = `rgba(173, 216, 230, ${tp.alpha})`; ctx.font = 'bold 60px Arial'; ctx.shadowColor = 'white'; ctx.shadowBlur = 20; ctx.fillText(tp.text, tp.x - 100, tp.y); }); requestAnimationFrame(animate); } animate(); setTimeout(() => addFirework(canvas.width * 0.3, canvas.height, 'red', 1000), 500); setTimeout(() => addFirework(canvas.width * 0.5, canvas.height, 'blue', 2000), 1000); setTimeout(() => addFirework(canvas.width * 0.7, canvas.height, 'green', 3000), 1500); setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0), 800); setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, '✨'), 1000);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Gauri!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworksCanvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let fireworks = [];
+        let stars = [];
+        let textParticles = [];
+        const textLine = [
+            { text: '🎂 Happy', xFactor: 0.3, delay: 1000 },
+            { text: '🎉 Birthday', xFactor: 0.5, delay: 2000 },
+            { text: '❤️ Gauri!', xFactor: 0.7, delay: 3000 }
+        ];
+
+        class Firework {
+            constructor(x, y, color, delay, shape) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.shape = shape;
+                this.particles = [];
+                this.exploded = false;
+                setTimeout(() => this.explode(), delay);
+            }
+            explode() {
+                this.exploded = true;
+                for (let i = 0; i < 150; i++) {
+                    this.particles.push(new Particle(this.x, this.y, this.color, this.shape));
+                }
+                setTimeout(() => {
+                    fireworks = fireworks.filter(fw => fw !== this);
+                }, 4000);
+            }
+            draw() {
+                if (!this.exploded) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    this.particles.forEach(p => p.update());
+                }
+            }
+            update() {
+                if (!this.exploded) {
+                    this.y -= 8;
+                }
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color, shape) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.alpha = 1;
+                this.shape = shape;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 12,
+                    y: (Math.random() - 0.5) * 12
+                };
+            }
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.02;
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.alpha;
+                ctx.font = '40px Arial';
+                ctx.fillText(this.shape, this.x, this.y);
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 4;
+                this.alpha = Math.random();
+            }
+            twinkle() {
+                this.alpha += (Math.random() - 0.5) * 0.02;
+                if (this.alpha < 0.2) this.alpha = 0.2;
+                if (this.alpha > 1) this.alpha = 1;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function addFirework(x, y, color, delay, shape) {
+            fireworks.push(new Firework(x, y, color, delay, shape));
+        }
+
+        function createStars() {
+            for (let i = 0; i < 300; i++) {
+                stars.push(new Star());
+            }
+        }
+        createStars();
+
+        function addTextParticles() {
+            textLine.forEach((t, i) => {
+                setTimeout(() => {
+                    textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.5, alpha: 0 });
+                }, t.delay);
+            });
+        }
+        addTextParticles();
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                star.twinkle();
+                star.draw();
+            });
+            fireworks.forEach(firework => {
+                firework.update();
+                firework.draw();
+            });
+            textParticles.forEach(tp => {
+                if (tp.alpha < 1) tp.alpha += 0.02;
+                ctx.fillStyle = `rgba(255, 215, 0, ${tp.alpha})`;
+                ctx.font = 'bold 90px Arial';
+                ctx.shadowColor = 'white';
+                ctx.shadowBlur = 30;
+                ctx.fillText(tp.text, tp.x - 100, tp.y);
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, '✨'), 1000);
         setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'red', 0, '🌸'), 2000);
         setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'pink', 0, '👑'), 2500);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'gold', 0, '🦋'), 3000);</script> </body> </html>
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'gold', 0, '🦋'), 3000);
+    </script>
+</body>
+</html>
