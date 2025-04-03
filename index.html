@@ -20,7 +20,7 @@
 <body>
     <canvas id="fireworksCanvas"></canvas>
     <audio id="backgroundMusic" loop autoplay>
-        <source src="your-music-file.mp3" type="audio/mpeg">
+        <source src="night-changes.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     
@@ -135,7 +135,7 @@
         function addTextParticles() {
             textLine.forEach((t, i) => {
                 setTimeout(() => {
-                    textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.4, alpha: 0 });
+                    textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.25, alpha: 0 });
                 }, t.delay);
             });
         }
@@ -154,7 +154,7 @@
             textParticles.forEach(tp => {
                 if (tp.alpha < 1) tp.alpha += 0.02;
                 ctx.fillStyle = `rgba(173, 216, 230, ${tp.alpha})`;
-                ctx.font = 'bold 40px Arial';
+                ctx.font = 'bold 30px Arial';
                 ctx.shadowColor = 'white';
                 ctx.shadowBlur = 50;
                 ctx.fillText(tp.text, tp.x - 100, tp.y);
@@ -164,9 +164,9 @@
         animate();
 
         setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, '', 5), 800);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'red', 0, '🌸', 20), 1500);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'pink', 0, '👑', 20), 2000);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'gold', 0, '🦋', 20), 2500);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'red', 0, '🌸', 15), 1500);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'pink', 0, '👑', 15), 2000);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'gold', 0, '🦋', 15), 2500);
     </script>
 </body>
 </html>
