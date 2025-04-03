@@ -36,11 +36,12 @@
         ];
 
         class Firework {
-            constructor(x, y, color, delay, shape) {
+            constructor(x, y, color, delay, shape, size) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
                 this.shape = shape;
+                this.size = size;
                 this.particles = [];
                 this.exploded = false;
                 setTimeout(() => this.explode(), delay);
@@ -48,7 +49,7 @@
             explode() {
                 this.exploded = true;
                 for (let i = 0; i < 150; i++) {
-                    this.particles.push(new Particle(this.x, this.y, this.color, this.shape));
+                    this.particles.push(new Particle(this.x, this.y, this.color, this.shape, this.size));
                 }
                 setTimeout(() => {
                     fireworks = fireworks.filter(fw => fw !== this);
@@ -72,15 +73,16 @@
         }
 
         class Particle {
-            constructor(x, y, color, shape) {
+            constructor(x, y, color, shape, size) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
                 this.alpha = 1;
                 this.shape = shape;
+                this.size = size;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 12,
-                    y: (Math.random() - 0.5) * 12
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
                 };
             }
             update() {
@@ -89,7 +91,7 @@
                 this.alpha -= 0.02;
                 ctx.fillStyle = this.color;
                 ctx.globalAlpha = this.alpha;
-                ctx.font = '40px Arial';
+                ctx.font = `${this.size}px Arial`;
                 ctx.fillText(this.shape, this.x, this.y);
                 ctx.globalAlpha = 1;
             }
@@ -115,8 +117,8 @@
             }
         }
 
-        function addFirework(x, y, color, delay, shape) {
-            fireworks.push(new Firework(x, y, color, delay, shape));
+        function addFirework(x, y, color, delay, shape, size) {
+            fireworks.push(new Firework(x, y, color, delay, shape, size));
         }
 
         function createStars() {
@@ -147,20 +149,20 @@
             });
             textParticles.forEach(tp => {
                 if (tp.alpha < 1) tp.alpha += 0.02;
-                ctx.fillStyle = `rgba(255, 215, 0, ${tp.alpha})`;
-                ctx.font = 'bold 90px Arial';
+                ctx.fillStyle = `rgba(173, 216, 230, ${tp.alpha})`;
+                ctx.font = 'bold 50px Arial';
                 ctx.shadowColor = 'white';
-                ctx.shadowBlur = 30;
+                ctx.shadowBlur = 50;
                 ctx.fillText(tp.text, tp.x - 100, tp.y);
             });
             requestAnimationFrame(animate);
         }
         animate();
 
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, '✨'), 1000);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'red', 0, '🌸'), 2000);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'pink', 0, '👑'), 2500);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'gold', 0, '🦋'), 3000);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, '', 5), 1000);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'red', 0, '🌸', 25), 2000);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'pink', 0, '👑', 25), 2500);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, 'gold', 0, '🦋', 25), 3000);
     </script>
 </body>
 </html>
