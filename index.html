@@ -30,21 +30,20 @@
         let stars = [];
         let textParticles = [];
         const textArch = [
-            { text: 'Happy', xFactor: 0.3, delay: 1000 },
-            { text: 'Birthday', xFactor: 0.5, delay: 2000 },
-            { text: 'Gauri!', xFactor: 0.7, delay: 3000 }
+            { text: '🎂 Happy', xFactor: 0.3, delay: 1000 },
+            { text: '🎉 Birthday', xFactor: 0.5, delay: 2000 },
+            { text: '❤️ Gauri!', xFactor: 0.7, delay: 3000 }
         ];
 
         class Firework {
-            constructor(x, y, color, delay, type) {
+            constructor(x, y, color, delay) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
-                this.type = type;
                 this.particles = [];
                 this.exploded = false;
                 setTimeout(() => this.explode(), delay);
-                for (let i = 0; i < 60; i++) {
+                for (let i = 0; i < 80; i++) {
                     this.particles.push(new Particle(this.x, this.y, this.color));
                 }
             }
@@ -58,7 +57,7 @@
                 if (!this.exploded) {
                     ctx.fillStyle = this.color;
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
+                    ctx.arc(this.x, this.y, 8, 0, Math.PI * 2);
                     ctx.fill();
                 } else {
                     this.particles.forEach(p => p.update());
@@ -66,7 +65,7 @@
             }
             update() {
                 if (!this.exploded) {
-                    this.y -= 3;
+                    this.y -= 6;
                 }
             }
         }
@@ -78,8 +77,8 @@
                 this.color = color;
                 this.alpha = 1;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 6,
-                    y: (Math.random() - 0.5) * 6
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
                 };
             }
             update() {
@@ -89,7 +88,7 @@
                 ctx.fillStyle = this.color;
                 ctx.globalAlpha = this.alpha;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.globalAlpha = 1;
             }
@@ -99,7 +98,7 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
+                this.size = Math.random() * 3;
                 this.alpha = Math.random();
             }
             twinkle() {
@@ -115,12 +114,12 @@
             }
         }
 
-        function addFirework(x, y, color, delay, type) {
-            fireworks.push(new Firework(x, y, color, delay, type));
+        function addFirework(x, y, color, delay) {
+            fireworks.push(new Firework(x, y, color, delay));
         }
 
         function createStars() {
-            for (let i = 0; i < 150; i++) {
+            for (let i = 0; i < 200; i++) {
                 stars.push(new Star());
             }
         }
@@ -129,7 +128,7 @@
         function addTextParticles() {
             textArch.forEach((t, i) => {
                 setTimeout(() => {
-                    textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.4 + (i * 30), alpha: 0 });
+                    textParticles.push({ text: t.text, x: canvas.width * t.xFactor, y: canvas.height * 0.4 + (i * 40), alpha: 0 });
                 }, t.delay);
             });
         }
@@ -147,18 +146,20 @@
             });
             textParticles.forEach((tp, index) => {
                 if (tp.alpha < 1) tp.alpha += 0.01;
-                ctx.fillStyle = `rgba(255, 215, 0, ${tp.alpha})`;
-                ctx.font = '50px Arial';
+                ctx.fillStyle = `rgba(173, 216, 230, ${tp.alpha})`;
+                ctx.font = 'bold 60px Arial';
+                ctx.shadowColor = 'white';
+                ctx.shadowBlur = 20;
                 ctx.fillText(tp.text, tp.x - 100, tp.y);
             });
             requestAnimationFrame(animate);
         }
         animate();
 
-        setTimeout(() => addFirework(canvas.width * 0.3, canvas.height, 'red', 1000, 'normal'), 500);
-        setTimeout(() => addFirework(canvas.width * 0.5, canvas.height, 'blue', 2000, 'normal'), 1000);
-        setTimeout(() => addFirework(canvas.width * 0.7, canvas.height, 'green', 3000, 'normal'), 1500);
-        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0, 'random'), 800);
+        setTimeout(() => addFirework(canvas.width * 0.3, canvas.height, 'red', 1000), 500);
+        setTimeout(() => addFirework(canvas.width * 0.5, canvas.height, 'blue', 2000), 1000);
+        setTimeout(() => addFirework(canvas.width * 0.7, canvas.height, 'green', 3000), 1500);
+        setInterval(() => addFirework(Math.random() * canvas.width, canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`, 0), 800);
     </script>
 </body>
 </html>
