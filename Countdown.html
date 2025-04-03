@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Gauri's Birthday</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        #countdown {
+            font-size: 50px;
+            font-weight: bold;
+            text-shadow: 0 0 10px cyan;
+        }
+        #message {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="countdown">00:00:00</div>
+    <div id="message">Waiting for the magic moment...</div>
+
+    <script>
+        function startCountdown() {
+            const targetDate = new Date('April 26, 2025 00:00:00').getTime();
+
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                const timeLeft = targetDate - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById("message").innerText = "Redirecting...";
+                    window.location.href = "https://ikushagrapandey.github.io/Happy-Birthday-Gauri/";
+                } else {
+                    const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+                    const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+                    const seconds = Math.floor((timeLeft / 1000) % 60);
+
+                    document.getElementById("countdown").innerText =
+                        (hours < 10 ? "0" : "") + hours + ":" +
+                        (minutes < 10 ? "0" : "") + minutes + ":" +
+                        (seconds < 10 ? "0" : "") + seconds;
+                }
+            }, 1000);
+        }
+
+        startCountdown();
+    </script>
+
+</body>
+</html>
